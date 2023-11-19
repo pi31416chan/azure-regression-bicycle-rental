@@ -1,0 +1,5 @@
+docker buildx build -f az-basic.Dockerfile -t pi31416chan/az-basic:latest -t pi31416chan/az-basic:02 .
+docker push pi31416chan/az-basic -a
+
+docker buildx build -f az-sklearn.Dockerfile -t pi31416chan/az-sklearn:latest -t pi31416chan/az-sklearn:02 .
+docker push pi31416chan/az-sklearn -a

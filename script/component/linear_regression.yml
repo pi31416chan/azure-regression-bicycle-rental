@@ -1,0 +1,27 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: linear_regression
+version: 6
+display_name: Linear Regression
+description: Train a linear regression model and evaluate its performance
+tags:
+  project: regression-bicycle
+type: command
+inputs:
+  input_data:
+    type: uri_folder
+    mode: ro_mount
+    description: "Input datastore folder URI"
+  fit_intercept:
+    type: boolean
+    default: True
+    description: "Whether to calculate the intercept for this model"
+outputs:
+  l_reg_model:
+    type: mlflow_model
+    mode: rw_mount
+    description: "Output MLflow model"
+code: ./src/linear_regression.py
+environment: azureml:sklearn:8
+command: >-
+  python linear_regression.py  --input_data ${{inputs.input_data}} --output_data
+  ${{outputs.l_reg_model}} --fit_intercept ${{inputs.fit_intercept}}

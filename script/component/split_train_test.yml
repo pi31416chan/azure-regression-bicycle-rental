@@ -1,0 +1,37 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: split_train_test
+version: 3
+display_name: Split Train Test
+description:
+  Split the Xy dataset into X_train, X_test, y_train, y_test according to
+  specified proportion
+tags:
+  project: regression-bicycle
+type: command
+inputs:
+  input_data:
+    type: uri_folder
+    mode: ro_mount
+    description: "Input datastore folder URI"
+  test_size:
+    type: number
+    default: 0.25
+    description:
+      "Float between 0.0 and 1.0 and represent the proportion of the dataset to
+      include in the test split. If None, default to 0.25"
+  shuffle:
+    type: boolean
+    default: True
+    description:
+      "Whether or not to shuffle the data before splitting. Default to True"
+outputs:
+  train_test_data:
+    type: uri_folder
+    mode: rw_mount
+    description: "Output datastore folder URI"
+code: ./src/split_train_test.py
+environment: azureml:sklearn:8
+command: >-
+  python split_train_test.py  --input_data ${{inputs.input_data}} --output_data
+  ${{outputs.train_test_data}} --test_size ${{inputs.test_size}} --shuffle
+  ${{inputs.shuffle}}

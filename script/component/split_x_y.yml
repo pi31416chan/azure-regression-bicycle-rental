@@ -1,0 +1,27 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: split_x_y
+version: 3
+display_name: Split X y
+description: Split the dataset into X and y with the given y label
+tags:
+  project: regression-bicycle
+type: command
+inputs:
+  input_data:
+    type: uri_folder
+    mode: ro_mount
+    description: "Input datastore folder URI"
+  label:
+    type: string
+    default: "rentals"
+    description: "Column to split as the label, y"
+outputs:
+  x_y_data:
+    type: uri_folder
+    mode: rw_mount
+    description: "Output datastore folder URI"
+code: ./src/split_x_y.py
+environment: azureml:basic:1
+command: >-
+  python split_x_y.py  --input_data ${{inputs.input_data}} --output_data
+  ${{outputs.x_y_data}} --label ${{inputs.label}}

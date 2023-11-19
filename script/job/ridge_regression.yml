@@ -1,0 +1,33 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+name: ridge-regression
+display_name: "Train Ridge Regression"
+description: "Job to train a Ridge Regression model to predict bicycle rentals"
+tags:
+  project: regression-bicycle
+compute: azureml:mlw-basic-cluster-fef66d1bb2
+environment: azureml:sklearn:8
+experiment_name: ridge-regression
+code: src/ridge_regression.py
+inputs:
+  input_data:
+    type: mltable
+    mode: direct
+    path: azureml:daily-bike-share:2
+  drop_col: "dteday,yr,hum,windspeed"
+  label: "rentals"
+  test_size: 0.25
+  shuffle: True
+  alpha: 1.0
+  fit_intercept: True
+  tol: 0.0001
+outputs:
+  ridge_reg_model:
+    type: mlflow_model
+    mode: rw_mount
+    name: ridge_reg_bicycle
+command: >-
+  python ridge_regression.py --input_data ${{inputs.input_data}} --output_data
+  ${{outputs.ridge_reg_model}} --drop_col ${{inputs.drop_col}} --label
+  ${{inputs.label}} --test_size ${{inputs.test_size}} --shuffle
+  ${{inputs.shuffle}} --alpha ${{inputs.alpha}} --fit_intercept
+  ${{inputs.fit_intercept}} --tol ${{inputs.tol}}

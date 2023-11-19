@@ -1,0 +1,27 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: drop_column
+version: 5
+display_name: Drop Columns
+description: Drop specified columns from input dataset
+tags:
+  project: regression-bicycle
+type: command
+inputs:
+  input_data:
+    type: mltable
+    mode: direct
+    description: "Input dataset URI"
+  drop_col:
+    type: string
+    default: "hum,windspeed"
+    description: "Columns to be dropped, separated by comma"
+outputs:
+  dropped_col_data:
+    type: uri_folder
+    mode: rw_mount
+    description: "Output datastore folder URI"
+code: ./src/drop_column.py
+environment: azureml:basic:1
+command: >-
+  python drop_column.py  --input_data ${{inputs.input_data}} --output_data
+  ${{outputs.dropped_col_data}} --drop_col ${{inputs.drop_col}}
